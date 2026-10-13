@@ -1,23 +1,42 @@
-# Lingguang Knowledge
+# Lingguang Knowledge · Obsidian 桌面插件
 
-Desktop-only Obsidian connector for the local Lingguang Knowledge Studio worker. Version 0.1.0 beta, not yet listed in the official community directory.
+0.2.0 测试版，将视频收集、任务跟踪、文章与完整机器转录导入到自己的知识库。代码 MIT 开源，尚未进入官方社区目录。
 
-## Install
+## 安装
 
-Start the local backend using its README, configure your own Agent/API and speech model. Copy main.js, manifest.json and styles.css into your vault's `.obsidian/plugins/lingguang-knowledge/`. Enable the plugin through Obsidian Community plugins settings (manual installation). Run the command “Lingguang Knowledge: 收集B站或YouTube视频”. Pending jobs are checked every 5 seconds while Obsidian is open. Completed Markdown and PNG/JPG/SVG assets are imported to the configured folder; existing notes are not overwritten.
+1. 按项目根目录 README 启动本机服务，并在后台配置自己的 Agent/API 与语音识别模型。默认地址 `http://127.0.0.1:8765`。插件不附带 Python、FFmpeg 或语音模型。
+2. 解压安装包，把整个 `lingguang-knowledge` 文件夹放到知识库的 `.obsidian/plugins/` 中。最终路径应为 `.obsidian/plugins/lingguang-knowledge/main.js`，避免多套一层文件夹。
+3. 在 Obsidian 的“设置 → 第三方插件”中启用 Lingguang Knowledge。启用前请自行审阅开源代码与网络行为。
+4. 在插件设置中填写本机地址和保存目录。模型密钥在本机后台配置，不要写进知识库。
 
-RSS collection remains in the backend webpage for this first release. Only jobs submitted through this plugin are imported. Video/audio/transcript bulk downloads remain available in the backend history page. The plugin does not itself execute FFmpeg or ship speech models.
+## 使用
 
-## Required disclosures
+- 命令面板 → “收集B站或YouTube视频”：粘贴链接并提交。
+- 左侧工具栏的书库图标，或命令“查看任务与历史”：查看本机全部任务，刷新状态，取消排队/运行任务，重新提交失败任务，手动导入历史记录。取消运行任务按后台现有规则处理，可能需要等待当前阶段退出。
+- Obsidian 打开时每5秒检查本插件提交的任务；完成后自动导入文章和图片。关闭后本机服务仍可继续处理，下次打开再导入。
+- 默认自动导入完整机器转录 TXT、SRT、JSON，并创建“转录-任务ID.md”，可以在设置中关闭。历史任务有转录时，也可单独点击“导入完整转录”。
+- 图片位于 `Lingguang/assets/任务ID/`。同任务再次导入不覆盖已有文章、转录或附件，保留你的手工编辑。
+- 笔记目录默认为 Lingguang；目录必须是知识库内的相对路径。
 
-Plugin code is MIT and currently has no paywall. It connects over HTTP only to a user-configured localhost/127.0.0.1 backend; no telemetry. The backend may send transcript text to the user's configured external Agent/API and sources to Bilibili/YouTube/RSS providers. API providers may charge fees: classify as Optional payments when submitting to the community directory. This plugin does not collect API keys, add advertisements, or implement checkout. Credentials belong in the backend, not the vault.
+失败任务和原视频素材仍保留在本机服务。重新提交创建新的任务，不会覆盖旧任务。视频/音频原文件不自动复制到知识库，可在网站历史页面下载。RSS单集选择暂时在网站完成，完成后可通过插件历史导入。
 
-The local worker must be online; mobile is not supported. Failed jobs produce a notice and are retained in the local backend. Import images only, not original media. The generated note may contain the backend's default article style; personalize backend prompts for learning notes.
+## 排查
 
-## Verification and release status
+连接失败：确认本机服务已启动，地址与端口正确；只支持 HTTP localhost/127.0.0.1。
+后台写稿不可用：在本机后台检查Agent配置、登录状态或API配额。
+导入失败：检查知识库磁盘空间与保存目录，然后执行“导入已完成的本机任务”重试。自动导入失败不会从待导入列表删除任务。
+历史为空：插件连接的是配置地址对应的本机实例，不是云端账号历史。
 
-Node tests mock Obsidian requestUrl and vault writes. Real Obsidian desktop installation and cross-version compatibility have not been tested. Do not claim official approval. Community submission needs a standalone plugin repository, release assets, required metadata and Obsidian review. Built package has no bundler dependency; main.js uses the provided Obsidian API runtime.
+## 隐私、费用与边界
 
-Official policies: https://docs.obsidian.md/community-directory/developer-policies
-Payments/disclosure: https://docs.obsidian.md/community-directory/faq
-Submission: https://docs.obsidian.md/Plugins/Releasing/Submit%20your%20plugin
+无遥测、无广告、无支付功能，仅通过 Obsidian requestUrl 连接配置的loopback地址。本机服务会访问视频来源、用户配置的Agent/API；使用外部模型可能产生费用，转录及其他发送范围取决于后台配置。本插件不保存API密钥。官方目录申报需披露网络使用，分类可用 Optional payments（使用自己的付费API）。
+
+只支持桌面；不是独立下载/转录程序。当前飞书保存仍由本机网页配置，插件提交默认不自动发布。机器转录可能误识别，保留原文来源；不要将其当成逐字校对稿。
+
+## 开发与验证
+
+`node --test test.cjs` 执行模拟Obsidian请求与知识库的测试。当前5项测试覆盖地址限制、路径限制、图片导入不覆盖、完整转录、失败重试状态。这些测试不代表已完成真实桌面联调；本次本机 Obsidian 未运行，尚未验证原生界面与跨版本兼容。
+
+插件直接使用Obsidian运行时提供的API，无打包器依赖。官方目录提交需要独立插件仓库、根目录manifest/LICENSE与release资产，并经过平台审核；当前是手动安装版本。
+
+[完整本机服务源码](https://github.com/lingling1989r/lingguang-knowledge-studio) · [官方开发规范](https://docs.obsidian.md/community-directory/developer-policies) · [提交插件](https://docs.obsidian.md/Plugins/Releasing/Submit%20your%20plugin)
