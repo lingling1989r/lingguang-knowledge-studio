@@ -128,3 +128,11 @@ node --check web/app.js
 播客选择“播客 RSS”，输入公开HTTPS RSS 2.0订阅地址，读取最近最多100集，选择一集再提交。需要item包含enclosure音频地址；不支持把平台节目网页当作RSS，也不支持私有订阅或登录付费源。RSS最多2MiB，重定向最多5次，拒绝本机/私有网络地址，XML禁止外部实体。单集媒体遵循后台下载大小限制，下载后ffprobe核验实际时长。音频不生成原视频截图，其他SVG配图、机器转录、素材下载及飞书保存继续使用；源音频导出名为source.m4a，实际编码由源站决定。自动识别语音语言。
 
 新来源做了模拟下载、解析与校验测试；未用真实YouTube及RSS完成写稿到飞书的端到端联调。公网部署还需出站防火墙限制内网与元数据访问，DNS校验不能替代网络隔离。当前仍是本机单用户版本。
+
+
+## Platform connectors (0.1.0 beta)
+
+- [Obsidian desktop connector](integrations/obsidian/README.md): submit Bilibili/YouTube URLs to your localhost backend, import completed Markdown and images into the vault. Manual-install beta, not community-listed.
+- [Feishu custom-app local bridge](integrations/FEISHU.md): single-account allowlist and official SDK long connection; media processing stays on your machine. Requires your own application configuration, not a marketplace app.
+
+These are implemented adapters with mock/API-contract tests; real platform end-to-end acceptance is pending. Original future architecture documents remain proposals. No payment checkout is implemented; commercial distribution must follow platform rules.

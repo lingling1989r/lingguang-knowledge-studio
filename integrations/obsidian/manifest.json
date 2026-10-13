@@ -1,0 +1,10 @@
+{
+  "id": "lingguang-knowledge",
+  "name": "Lingguang Knowledge",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Collect videos with a local worker and import source-linked notes into your vault.",
+  "author": "lingling1989r",
+  "authorUrl": "https://github.com/lingling1989r",
+  "isDesktopOnly": true
+}
