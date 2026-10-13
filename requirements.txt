@@ -1,0 +1,13 @@
+fastapi>=0.115
+uvicorn>=0.34
+yt-dlp>=2026.8.19
+requests>=2.32
+fonttools>=4.55
+cairosvg>=2.7
+pillow>=11
+mlx-whisper>=0.4; sys_platform == "darwin"
+faster-whisper>=1.1; sys_platform != "darwin"
+pytest>=8
+httpx>=0.28
+
+defusedxml>=0.7
