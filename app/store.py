@@ -1,10 +1,15 @@
-import json, os, re, threading
+import json, os, re, threading, sys
 from pathlib import Path
 from datetime import datetime, timezone
 from uuid import uuid4
 
 ROOT = Path(__file__).resolve().parent.parent
-STATE = Path(os.getenv("STUDIO_STATE_DIR") or ROOT / ".state")
+if getattr(sys, "frozen", False):
+    from desktop.runtime import data_directory
+    DEFAULT_STATE = data_directory()
+else:
+    DEFAULT_STATE = ROOT / ".state"
+STATE = Path(os.getenv("STUDIO_STATE_DIR") or DEFAULT_STATE)
 STATE.mkdir(parents=True, exist_ok=True)
 LOCK = threading.RLock()
 
