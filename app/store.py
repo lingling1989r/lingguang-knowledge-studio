@@ -91,7 +91,7 @@ def ai_issue():
 def agent_config():
     path=STATE/"agent.json"
     if path.exists():return json.loads(path.read_text())
-    return {"url":os.getenv("STUDIO_AGENT_URL",""),"token":os.getenv("STUDIO_AGENT_TOKEN","")}
+    return {"mode":"agent" if os.getenv("STUDIO_AGENT_URL") else ("openclacky" if os.getenv("STUDIO_DESKTOP") else "codex"), "url":os.getenv("STUDIO_AGENT_URL",""),"token":os.getenv("STUDIO_AGENT_TOKEN","")}
 
 
 def connection_health():

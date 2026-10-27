@@ -15,6 +15,10 @@ def test_non_video_urls_and_other_parts_are_rejected(url):
 
 @pytest.fixture
 def studio(tmp_path,monkeypatch):
+    from collections import namedtuple
+    import shutil
+    usage = namedtuple("usage", "total used free")
+    monkeypatch.setattr(shutil, "disk_usage", lambda path: usage(100*1024**3, 10*1024**3, 90*1024**3))
     monkeypatch.setattr(store,"STATE",tmp_path)
     store.atomic_json(tmp_path/"agent.json",{"mode":"gpt"})
     monkeypatch.setenv("OPENAI_API_KEY","test-key-never-returned")

@@ -68,7 +68,7 @@ def output_file(job_id,filename):
 @app.get("/api/status")
 def status():
     config=store.feishu_config()
-    return {"request_token":TOKEN,"feishu_connected":bool(config.get("app_id") and config.get("app_secret")),"agent_ready":agent.ready(),"preferences":store.preferences(),"max_video_minutes":limits.current().max_video_minutes}
+    return {"desktop":bool(os.getenv("STUDIO_DESKTOP")),"request_token":TOKEN,"feishu_connected":bool(config.get("app_id") and config.get("app_secret")),"agent_ready":agent.ready(),"preferences":store.preferences(),"max_video_minutes":limits.current().max_video_minutes}
 
 @app.post("/api/settings")
 def settings(value: Preferences, request: Request):

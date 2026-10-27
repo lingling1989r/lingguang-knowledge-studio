@@ -17,7 +17,7 @@ def default_model():
 
 def endpoint():
     config = store.agent_config()
-    value = "" if mode() in ("gpt", "codex") else config.get("url", "").strip()
+    value = "" if mode() in ("gpt", "codex", "openclacky") else config.get("url", "").strip()
     if value:
         parsed = urlparse(value)
         if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
@@ -29,6 +29,9 @@ def ready():
     try:
         if store.connection_health().get("ok") is False:
             return False
+        if mode()=="openclacky":
+            from .openclacky import ready as clacky_ready
+            return clacky_ready()
         if mode()=="codex":
             return bool(shutil.which("codex"))
         if endpoint():
@@ -68,6 +71,9 @@ def codex_complete(payload, schema):
 
 
 def complete(job_id, payload, schema):
+    if mode()=="openclacky":
+        from .openclacky import complete as clacky_complete
+        return clacky_complete(payload,schema)
     if mode()=="codex":return codex_complete(payload,schema)
     url = endpoint()
     if url:

@@ -43,6 +43,12 @@ def secure_url(value):
         raise HTTPException(422, "连接地址须为不含账号、查询参数的 HTTPS 地址。")
     return value.rstrip("/")
 
+def model_url(value):
+    parsed = urlparse(value)
+    if parsed.scheme == "http" and parsed.hostname in ("127.0.0.1", "localhost", "::1") and not (parsed.username or parsed.password or parsed.query or parsed.fragment):
+        return value.rstrip("/")
+    return secure_url(value)
+
 @router.get("/session")
 def session(request: Request):
     return {"initialized": (store.STATE/"admin-auth.json").exists(), "logged_in": SESSIONS.get(request.cookies.get(COOKIE,""),0)>time.time()}
@@ -95,7 +101,7 @@ def overview(request: Request):
 @router.post("/connection")
 def connection(value: Connection, request: Request):
     require(request)
-    if value.mode not in ("agent","gpt","codex"):raise HTTPException(422,"请选择 Codex CLI、Agent 或默认 GPT。")
+    if value.mode not in ("agent","gpt","codex","openclacky"):raise HTTPException(422,"请选择 OpenClacky、Codex CLI、Agent 或自有模型。")
     if any(j["status"] in ("queued","running") for j in store.all_jobs()):raise HTTPException(409,"请等待运行中的任务结束后再更新连接。")
     a=store.agent_config(); g=store.ai_config()
     if value.mode=="codex":
@@ -105,10 +111,11 @@ def connection(value: Connection, request: Request):
         if not token:raise HTTPException(422,"请填写 Agent Token。")
         store.atomic_json(store.STATE/"agent.json",{"mode":"agent","url":url,"token":token})
     else:
-        base=secure_url(value.api_base); key=value.api_key or g.get("api_key","")
+        base=model_url(value.api_base); key=value.api_key or g.get("api_key","")
+        if urlparse(base).scheme=="http" and not key:key="local"
         if not key or not value.model.strip():raise HTTPException(422,"请填写默认模型和 API Key。")
         store.atomic_json(store.STATE/"ai.json",{"api_base":base,"model":value.model.strip(),"api_key":key})
-        store.atomic_json(store.STATE/"agent.json",{"mode":"gpt","url":a.get("url",""),"token":a.get("token","")})
+        store.atomic_json(store.STATE/"agent.json",{"mode":value.mode,"url":a.get("url",""),"token":a.get("token","")})
     (store.STATE/"ai-health.json").unlink(missing_ok=True)
     (store.STATE/"connection-health.json").unlink(missing_ok=True)
     return {"saved":True,"message":"已保存，尚未验证；请测试连接。"}

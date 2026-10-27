@@ -6,3 +6,12 @@ __pycache__/
 .state/
 .venv/
 *.pyc
+
+/build/
+/dist/
+*.spec
+
+.venv-desktop/
+.build-openclacky/
+
+.desktop-vendor/

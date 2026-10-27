@@ -136,3 +136,7 @@ node --check web/app.js
 - [Feishu custom-app local bridge](integrations/FEISHU.md): single-account allowlist and official SDK long connection; media processing stays on your machine. Requires your own application configuration, not a marketplace app.
 
 These are implemented adapters with mock/API-contract tests; real platform end-to-end acceptance is pending. Original future architecture documents remain proposals. No payment checkout is implemented; commercial distribution must follow platform rules.
+
+## 桌面版本（内测）
+
+新增原生窗口与本机处理进程，优先使用用户设备；内置OpenClacky写稿适配器使用自己的模型/API。[安装、配置、构建与限制](desktop/README.md)。当前仅提供macOS Apple Silicon内测构建，不代表已完成签名公证或干净设备联调。
