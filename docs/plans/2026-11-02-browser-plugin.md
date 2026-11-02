@@ -1,0 +1,11 @@
+# B站浏览器插件与本机处理组件
+
+用户明确改为浏览器插件：在B站视频页即可调用，用自己的设备处理，并顺带转录BV1vXJkz1E8U当前第1分P。实现Chrome/Edge的MV3入口；当前实际验证macOS Apple芯片与Chrome for Testing。
+
+入口仅申请activeTab、nativeMessaging、downloads，不收集Cookie或全站历史，不注入远程脚本。浏览器使用一次性Native Messaging宿主，宿主验证固定扩展来源，只接受固定操作，启动受文件锁保护的单个本机loopback工作进程。后台与当前数字员工工作台隔离数据、端口、进程，避免多个入口抢同一份状态。
+
+本机组件安装到Application Support；从浏览器直接读取Desktop源码会触发macOS权限限制。下载交由Chrome保存对话框，避免让Python写受保护的下载目录。Python运行环境也放在Application Support。
+
+转录独立于写稿模型，低码率音频下载后本地MLX识别；每两分钟保存识别检查点，完整保留识别片段，再提供TXT/SRT/JSON/时间戳MD。图文复用已有pipeline；用户自行配置API或具备OpenClacky运行时，并可选择自己的飞书。未验证真实付费模型及飞书权限，不宣称已经上架。
+
+验证包括链接及权限Node测试、原生消息与API队列测试、真实扩展+原生宿主+本机工作进程+模拟模型联调；真实81分钟第1分P按相同ASR引擎处理，保留来源和未经人工逐字校对说明。

@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "灵光 · B站视频转录",
+  "version": "0.1.0",
+  "description": "在当前B站视频页一键提交本机转录，保留完整文本、字幕和来源。",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4AAbnZLaPVneSoE3jsJRltg26V3NZLuWefe1Gj4aLjxCuMnJ0r65/yqxPGWQfL9RzwnLSdOx/9FRj0HrrbI8qTWLPRmhcJCdEuKh6qppMMOevIexgkOARgfbjUk+HR6nWcBUpsjMj+UlwbQGo9wHvUNXnWOz9hqFJo7U8mYLHkazTBtM1sjTYnGHX+yc9ft2BMNrTUeNWWBawJSSfqdYK4+2dhGtt5kx9QbPEM68DnV5nmEMq0uXhuTz+vUv7xi5IU3+QBG4vVytSe5D7rgruTCGXgcCiHEuDxiXCmbVecjv9sd2b8bHSU4RJDcz7T8zZ+XtQBpURdSyFAJZyqDqjQIDAQAB",
+  "permissions": [
+    "activeTab",
+    "nativeMessaging",
+    "downloads"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "转录当前B站视频"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  }
+}
